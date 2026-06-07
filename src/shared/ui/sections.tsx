@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Reveal } from "@/shared/motion/primitives";
 import { useSiteConfig } from "@/shared/data/useMenu";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
 export function StorySection() {
@@ -69,9 +70,9 @@ export function SiteFooter() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <span className="font-display text-3xl">{site.brand}</span>
         <nav className="flex gap-4 text-sm text-[var(--color-muted)]">
-          <a href="/es/aviso-legal">Aviso legal</a>
-          <a href="/es/privacidad">Privacidad</a>
-          <a href="/es/cookies">Cookies</a>
+          <Link href="/aviso-legal">Aviso legal</Link>
+          <Link href="/privacidad">Privacidad</Link>
+          <Link href="/cookies">Cookies</Link>
         </nav>
       </div>
     </footer>

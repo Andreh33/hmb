@@ -1,24 +1,39 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMenu } from "@/shared/data/useMenu";
-import { useCart } from "./cart-store";
 import type { Locale } from "@/i18n/routing";
+import { MenuItemCard } from "./MenuItemCard";
 
-const BADGE_LABEL: Record<string, { es: string; en: string }> = {
-  nuevo: { es: "Nuevo", en: "New" },
-  picante: { es: "Picante", en: "Spicy" },
-  veggie: { es: "Veggie", en: "Veggie" },
-};
+/** Skeleton card shown during the first paint window (perceived speed). */
+function SkeletonCard() {
+  return (
+    <li className="overflow-hidden rounded-[var(--radius)] border border-[var(--color-muted)]/15 bg-[var(--color-surface)]">
+      <div className="aspect-[4/3] w-full animate-pulse bg-[var(--color-muted)]/10" />
+      <div className="space-y-3 p-5">
+        <div className="h-6 w-2/3 animate-pulse rounded bg-[var(--color-muted)]/12" />
+        <div className="h-4 w-full animate-pulse rounded bg-[var(--color-muted)]/10" />
+        <div className="h-4 w-4/5 animate-pulse rounded bg-[var(--color-muted)]/10" />
+        <div className="h-10 w-full animate-pulse rounded bg-[var(--color-muted)]/12" />
+      </div>
+    </li>
+  );
+}
 
 export function MenuSection() {
   const t = useTranslations("menu");
   const locale = useLocale() as Locale;
   const { categories, items } = useMenu();
-  const add = useCart((s) => s.add);
   const [activeCat, setActiveCat] = useState<string>("all");
   const [query, setQuery] = useState("");
+  // Brief skeleton window so the grid never pops in raw (also covers async
+  // data once A-DATA swaps the mock for a real query behind useMenu()).
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setReady(true), 220);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const filtered = useMemo(() => {
     return items.filter((it) => {
@@ -39,10 +54,10 @@ export function MenuSection() {
       className="relative mx-auto w-full max-w-6xl px-5 py-24 md:py-32"
     >
       <header className="mb-10">
-        <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
+        <h2 className="font-display text-5xl leading-[0.95] md:text-7xl">
           {t("title")}
         </h2>
-        <p className="mt-3 text-[var(--color-muted)] text-lg">{t("subtitle")}</p>
+        <p className="mt-3 text-lg text-[var(--color-muted)]">{t("subtitle")}</p>
       </header>
 
       <div className="mb-8 flex flex-wrap items-center gap-3">
@@ -71,50 +86,20 @@ export function MenuSection() {
         />
       </div>
 
-      {filtered.length === 0 ? (
-        <p className="py-16 text-center text-[var(--color-muted)]">{t("empty")}</p>
+      {!ready ? (
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }, (_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </ul>
+      ) : filtered.length === 0 ? (
+        <p className="py-16 text-center text-[var(--color-muted)]">
+          {t("empty")}
+        </p>
       ) : (
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((it) => (
-            <li
-              key={it.id}
-              className="group flex flex-col rounded-[var(--radius)] border border-[var(--color-muted)]/15 bg-[var(--color-surface)] p-5 transition hover:border-[var(--color-accent)]/50"
-            >
-              <div className="mb-3 flex items-start justify-between gap-3">
-                <h3 className="font-display text-2xl leading-tight">
-                  {it.name[locale]}
-                </h3>
-                <span className="shrink-0 font-display text-xl text-[var(--color-accent)]">
-                  {(it.priceCents / 100).toFixed(2)}€
-                </span>
-              </div>
-              <p className="mb-4 flex-1 text-sm text-[var(--color-muted)]">
-                {it.desc[locale]}
-              </p>
-              <div className="mb-4 flex flex-wrap gap-2">
-                {it.badges.map((b) => (
-                  <span
-                    key={b}
-                    className="rounded-full bg-[var(--color-accent)]/15 px-2.5 py-1 text-xs text-[var(--color-accent)]"
-                  >
-                    {BADGE_LABEL[b]?.[locale] ?? b}
-                  </span>
-                ))}
-                {it.allergens.length > 0 && (
-                  <span className="rounded-full border border-[var(--color-muted)]/30 px-2.5 py-1 text-xs text-[var(--color-muted)]">
-                    {t("allergens")}: {it.allergens.join(", ")}
-                  </span>
-                )}
-              </div>
-              <button
-                onClick={() =>
-                  add({ id: it.id, name: it.name[locale], price: it.priceCents })
-                }
-                className="sear-glow w-full rounded-[var(--radius)] bg-[var(--color-accent)] px-4 py-2.5 font-medium text-[var(--color-bg)] transition active:scale-95"
-              >
-                {t("addToOrder")}
-              </button>
-            </li>
+            <MenuItemCard key={it.id} item={it} />
           ))}
         </ul>
       )}

@@ -4,8 +4,10 @@ import { useMemo } from "react";
 import { MOCK_CATEGORIES, MOCK_MENU, MOCK_SITE_CONFIG } from "./mock";
 import type { Category, MenuItem, SiteConfig } from "./types";
 
-// Client-side data hooks. A-DATA swaps the mock source for Supabase queries
-// behind this same interface (server fetch + RLS), so callers don't change.
+// Client-side data hooks. They keep returning mock data so the interface and
+// SSR stay stable. Server Components that want live Supabase data (with mock
+// fallback) should use the same-shaped `useMenuAsync` / `useSiteConfigAsync`
+// from "./useMenu.server", which read through src/shared/data/queries.ts.
 
 export function useMenu(): { categories: Category[]; items: MenuItem[] } {
   return useMemo(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { HeroManifest } from "./manifest";
 import { getScroll } from "@/shared/scroll/scroll-store";
 
@@ -19,7 +19,7 @@ export function LayeredParallax({
   /** Multiplier for how far layers separate at full progress. */
   explode?: number;
 }) {
-  const layers = manifest.layers ?? [];
+  const layers = useMemo(() => manifest.layers ?? [], [manifest.layers]);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
