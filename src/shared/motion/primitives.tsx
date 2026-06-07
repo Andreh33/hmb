@@ -435,6 +435,9 @@ export function OutlineToFill({
       style={{
         display: "inline-block",
         position: "relative",
+        maxWidth: "100%",
+        whiteSpace: "normal",
+        overflowWrap: "anywhere",
         ...style,
       }}
     >

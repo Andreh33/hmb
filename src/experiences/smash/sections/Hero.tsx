@@ -33,6 +33,7 @@ export function Hero() {
   const shake = useAnimationControls();
   const flash = useRef<HTMLDivElement>(null);
   const plate = useRef<HTMLDivElement>(null);
+  const scrim = useRef<HTMLDivElement>(null);
   const headingSkew = useVelocitySkew<HTMLHeadingElement>(
     SKEW.heading.factor,
     SKEW.heading.max,
@@ -64,10 +65,17 @@ export function Hero() {
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
-      const el = plate.current;
-      if (!el) return;
       const p = getScroll().progress;
-      el.style.transform = `translate3d(0, ${(-p * 12).toFixed(2)}%, 0) scale(${(1 + p * 0.12).toFixed(3)})`;
+      const el = plate.current;
+      if (el) {
+        el.style.transform = `translate3d(0, ${(-p * 12).toFixed(2)}%, 0) scale(${(1 + p * 0.12).toFixed(3)})`;
+      }
+      // Scrim darkens the burger behind the headline at rest (text legible),
+      // then fades out as you scroll and the burger comes forward.
+      const sc = scrim.current;
+      if (sc) {
+        sc.style.opacity = (0.6 * Math.max(0, 1 - p / 0.32)).toFixed(3);
+      }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -134,6 +142,15 @@ export function Hero() {
         }}
       />
 
+      {/* (Home) Dark scrim over the burger, behind the text — keeps the headline
+          legible at rest, fades out on scroll as the burger comes forward. */}
+      <div
+        ref={scrim}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-20"
+        style={{ background: "var(--color-bg)", opacity: 0.6 }}
+      />
+
       {/* impact flash */}
       <div
         ref={flash}
@@ -163,21 +180,6 @@ export function Hero() {
             </span>
             {t("title")}
           </span>
-          {/* (6) Ketchup drips that fall from the title on load. */}
-          {[
-            { left: "12%", h: "46px", d: "0.5s" },
-            { left: "34%", h: "30px", d: "0.9s" },
-            { left: "58%", h: "58px", d: "0.7s" },
-            { left: "76%", h: "26px", d: "1.1s" },
-            { left: "90%", h: "40px", d: "0.6s" },
-          ].map((d) => (
-            <span
-              key={d.left}
-              aria-hidden
-              className="smash-drip"
-              style={{ left: d.left, height: d.h, animationDelay: d.d }}
-            />
-          ))}
         </h1>
 
         <p className="mt-6 max-w-xl text-base uppercase leading-snug tracking-[0.14em] text-[var(--color-muted)] md:text-lg">

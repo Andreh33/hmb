@@ -37,7 +37,7 @@ export function Story() {
 
       <OutlineToFill
         text={t("title")}
-        className="smash-display block max-w-5xl text-[clamp(2.5rem,7vw,6rem)] uppercase"
+        className="smash-display max-w-full text-[clamp(2rem,6vw,5rem)] uppercase"
         fillColor="var(--color-accent)"
         strokeColor="var(--color-text)"
         strokeWidth={2}

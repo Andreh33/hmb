@@ -209,14 +209,14 @@ export function SmashStyle() {
     rgba(255,255,255,0.035) 1px,
     transparent 1px,
     transparent 3px);
-  mix-blend-mode:overlay;opacity:0.5;
+  mix-blend-mode:overlay;opacity:0.4;
 }
 /* Animated film grain via SVG turbulence (data-uri, no asset). */
 .smash-atmos-grain{
   position:absolute;inset:-50%;
   width:200%;height:200%;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  opacity:0.08;mix-blend-mode:overlay;
+  opacity:0.064;mix-blend-mode:overlay;
   animation:smash-grain 0.6s steps(4) infinite;
 }
 @keyframes smash-grain{
@@ -267,9 +267,9 @@ export function SmashStyle() {
   content:"";position:absolute;left:0;right:0;height:14vh;
   background:linear-gradient(to bottom,
     transparent,
-    color-mix(in srgb, var(--color-accent) 22%, transparent) 40%,
-    rgba(255,255,255,0.18) 50%,
-    color-mix(in srgb, var(--color-accent2) 22%, transparent) 60%,
+    color-mix(in srgb, var(--color-accent) 18%, transparent) 40%,
+    rgba(255,255,255,0.14) 50%,
+    color-mix(in srgb, var(--color-accent2) 18%, transparent) 60%,
     transparent);
   mix-blend-mode:screen;
   animation:smash-vhs-band 0.6s ease-out;
@@ -281,22 +281,6 @@ export function SmashStyle() {
 }
 @keyframes smash-vhs-run{0%{opacity:1}100%{opacity:0}}
 @keyframes smash-vhs-band{0%{top:-16vh}100%{top:104vh}}
-
-/* (6) Ketchup drip falling from the hero title on load. */
-.smash-drip{position:absolute;top:100%;width:6px;border-radius:0 0 6px 6px;
-  background:linear-gradient(to bottom, var(--color-accent), color-mix(in srgb,var(--color-accent) 70%, #600));
-  box-shadow:0 0 calc(10px*var(--glow)) color-mix(in srgb,var(--color-accent) 70%,transparent);
-  transform-origin:top;transform:scaleY(0);
-  animation:smash-drip-fall 1.4s cubic-bezier(.5,.05,.5,1) forwards;
-}
-.smash-drip::after{content:"";position:absolute;left:50%;bottom:-5px;width:11px;height:11px;
-  border-radius:50%;background:inherit;transform:translateX(-50%);
-  box-shadow:0 0 calc(10px*var(--glow)) color-mix(in srgb,var(--color-accent) 70%,transparent);}
-@keyframes smash-drip-fall{
-  0%{transform:scaleY(0)}
-  70%{transform:scaleY(1)}
-  100%{transform:scaleY(0.96)}
-}
 
 /* (4) Vapor / smoke rising off the burger. */
 .smash-vapor{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}

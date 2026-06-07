@@ -25,7 +25,7 @@ export function OutlineToFill({
   return (
     <span
       ref={ref}
-      className={`group relative inline-block font-display leading-none ${className}`}
+      className={`group relative inline-block max-w-full whitespace-normal align-top font-display leading-none [overflow-wrap:anywhere] ${className}`}
       aria-label={text}
     >
       {/* Outline base */}
