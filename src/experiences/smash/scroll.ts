@@ -16,10 +16,7 @@ export function useVelocitySkew<T extends HTMLElement = HTMLDivElement>(
   const ref = useRef<T>(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduce) return;
+    // Reduced-motion intentionally not honoured (spec §16).
     let raf = 0;
     let cur = 0;
     const tick = () => {

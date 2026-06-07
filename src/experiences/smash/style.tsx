@@ -209,12 +209,6 @@ export function SmashStyle() {
   mix-blend-mode:multiply;
 }
 
-@media (prefers-reduced-motion: reduce){
-  .smash-glitch:hover::before,.smash-glitch:hover::after{animation:none}
-  .smash-neon-live{animation:none}
-  .smash-atmos-wash,.smash-atmos-grain{animation:none}
-  .smash-atmos-grain{opacity:0.05}
-}
 `,
       }}
     />

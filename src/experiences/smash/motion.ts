@@ -38,8 +38,10 @@ export function useSmashSfx() {
   };
 }
 
-/** prefers-reduced-motion guard, SSR-safe. */
+/**
+ * Reduced-motion is intentionally NOT honoured (spec §16: "prima el impacto").
+ * Kept as a function so call sites stay unchanged; always returns false.
+ */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return false;
 }

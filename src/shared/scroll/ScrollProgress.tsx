@@ -48,9 +48,8 @@ export function ScrollProgress({
     const label = labelRef.current;
     if (!arc) return;
 
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    // Reduced-motion intentionally not honoured (spec §16) — always ease.
+    const reduce = false;
 
     arc.style.strokeDasharray = String(circumference);
 
