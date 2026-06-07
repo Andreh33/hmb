@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "menu": "Carta",
+    "story": "Historia",
+    "location": "Dónde estamos",
+    "order": "Pedir",
+    "gallery": "Galería",
+    "preview": "Probador"
+  },
+  "hero": {
+    "scrollHint": "Desliza para montar"
+  },
+  "menu": {
+    "title": "La carta",
+    "subtitle": "Carne madurada, pan brioche, fuego.",
+    "all": "Todo",
+    "search": "Buscar en la carta",
+    "addToOrder": "Añadir",
+    "allergens": "Alérgenos",
+    "empty": "No hay platos en esta categoría todavía."
+  },
+  "order": {
+    "title": "Tu pedido",
+    "empty": "Tu pedido está vacío",
+    "subtotal": "Subtotal",
+    "items": "{count, plural, =0 {0 platos} one {# plato} other {# platos}}",
+    "whatsapp": "Pedir por WhatsApp",
+    "notes": "Notas para la cocina",
+    "remove": "Quitar"
+  },
+  "experience": {
+    "label": "Experiencia",
+    "switchTo": "Cambiar a {name}"
+  },
+  "gallery": {
+    "title": "Galería de componentes",
+    "subtitle": "Cada pieza, en las cinco experiencias."
+  },
+  "preview": {
+    "title": "Crea la web de tu restaurante",
+    "subtitle": "Escribe tu nombre, elige estilo y míralo en vivo.",
+    "brandLabel": "Nombre del local",
+    "accentLabel": "Color de acento",
+    "experienceLabel": "Estilo",
+    "photoLabel": "Foto de tu hamburguesa",
+    "share": "Compartir mi preview",
+    "contact": "Hablar con Latech"
+  },
+  "common": {
+    "soundOn": "Sonido activado",
+    "soundOff": "Sonido desactivado",
+    "loading": "Cargando"
+  },
+  "legal": {
+    "cookiesTitle": "Usamos cookies",
+    "cookiesBody": "Usamos cookies propias para recordar tu experiencia. No cargamos terceros sin tu consentimiento.",
+    "accept": "Aceptar",
+    "reject": "Rechazar"
+  }
+}

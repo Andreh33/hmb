@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "story": "Story",
+    "location": "Find us",
+    "order": "Order",
+    "gallery": "Gallery",
+    "preview": "Previewer"
+  },
+  "hero": {
+    "scrollHint": "Scroll to build"
+  },
+  "menu": {
+    "title": "The menu",
+    "subtitle": "Aged beef, brioche bun, fire.",
+    "all": "All",
+    "search": "Search the menu",
+    "addToOrder": "Add",
+    "allergens": "Allergens",
+    "empty": "No dishes in this category yet."
+  },
+  "order": {
+    "title": "Your order",
+    "empty": "Your order is empty",
+    "subtotal": "Subtotal",
+    "items": "{count, plural, =0 {0 items} one {# item} other {# items}}",
+    "whatsapp": "Order via WhatsApp",
+    "notes": "Notes for the kitchen",
+    "remove": "Remove"
+  },
+  "experience": {
+    "label": "Experience",
+    "switchTo": "Switch to {name}"
+  },
+  "gallery": {
+    "title": "Component gallery",
+    "subtitle": "Every piece, across all five experiences."
+  },
+  "preview": {
+    "title": "Build your restaurant's site",
+    "subtitle": "Type your name, pick a style, watch it live.",
+    "brandLabel": "Venue name",
+    "accentLabel": "Accent color",
+    "experienceLabel": "Style",
+    "photoLabel": "Photo of your burger",
+    "share": "Share my preview",
+    "contact": "Talk to Latech"
+  },
+  "common": {
+    "soundOn": "Sound on",
+    "soundOff": "Sound off",
+    "loading": "Loading"
+  },
+  "legal": {
+    "cookiesTitle": "We use cookies",
+    "cookiesBody": "We use first-party cookies to remember your experience. No third parties load without your consent.",
+    "accept": "Accept",
+    "reject": "Reject"
+  }
+}
