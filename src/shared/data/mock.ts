@@ -74,12 +74,14 @@ export const MOCK_MENU: MenuItem[] = [
 ];
 
 export const MOCK_SITE_CONFIG: SiteConfig = {
-  experience: "ember",
-  brand: "SEAR",
+  experience: "smash",
+  brand: "SMASH",
   whatsapp: "+34600000000",
   address: "Calle de la Brasa, 1, Madrid",
   lat: 40.4168,
   lng: -3.7038,
   hours: { "lun-jue": "13:00–23:30", "vie-sab": "13:00–01:00", dom: "13:00–23:00" },
   socials: { instagram: "#", tiktok: "#" },
+  // Real burger photo for the hero background (Unsplash, demo). Swap per client.
+  hero: { mode: "still", still: "/hero/demo/smash-hero.jpg", focal: [0.5, 0.52] },
 };

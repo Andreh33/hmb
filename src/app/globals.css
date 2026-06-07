@@ -17,17 +17,18 @@
 }
 
 :root {
-  --bg: #0b0a09;
-  --surface: #16130f;
-  --text: #f3ebdd;
-  --muted: #a89a85;
-  --accent: #e0992f;
-  --accent2: #8c1c13;
-  --glaze: #e0992f;
-  --display: var(--font-fraunces), serif;
-  --body: var(--font-geist), sans-serif;
-  --radius: 2px;
-  --glow: 0.35;
+  /* Defaults = SMASH (the only experience) so SSR paints correctly pre-hydration. */
+  --bg: #0e0e10;
+  --surface: #1a1a1e;
+  --text: #ffffff;
+  --muted: #9a9aa2;
+  --accent: #ff2d2d;
+  --accent2: #f5d311;
+  --glaze: #ffb020;
+  --display: var(--font-clash), sans-serif;
+  --body: var(--font-satoshi), sans-serif;
+  --radius: 0px;
+  --glow: 0.9;
   /* Fontshare fonts aliased to loaded Google variables until self-hosted. */
   --font-clash: var(--font-bricolage);
   --font-satoshi: var(--font-geist);

@@ -23,6 +23,9 @@ export function ExperienceToggle() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setId]);
 
+  // With a single experience there is nothing to switch between — hide the UI.
+  if (EXPERIENCE_ORDER.length <= 1) return null;
+
   return (
     <div className="flex items-center gap-1 rounded-full border border-[var(--color-muted)]/25 bg-[var(--color-surface)]/70 p-1 backdrop-blur">
       {EXPERIENCE_ORDER.map((eid, i) => {

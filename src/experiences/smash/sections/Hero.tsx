@@ -1,203 +1,171 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, useAnimationControls } from "motion/react";
 import { useTranslations } from "next-intl";
 import { resolveHeroManifest } from "@/shared/hero/manifest";
 import { useSiteConfig } from "@/shared/data/useMenu";
-import { LayeredParallax } from "@/shared/hero/LayeredParallax";
+import { getScroll } from "@/shared/scroll/scroll-store";
 import { Magnetic } from "@/shared/motion/primitives";
 import { useSmashSfx, prefersReducedMotion } from "../motion";
 import { useVelocitySkew } from "../scroll";
-import { T, SKEW } from "../anim";
+import { SKEW } from "../anim";
 import { Stickers } from "./Stickers";
 
 const HERO_ID = "smash-hero-stage";
 
 /**
- * SMASH hero. Photoreal ingredient layers (manifest PNG/SVG planes) STAMP into
- * place one by one — each impact triggers screen-shake, a white flash and an
- * SFX thud, with neon edges + an RGB-split ghost over the photo. Once assembled
- * the stack lives inside LayeredParallax so scrolling separates the layers with
- * velocity-reactive skew (the page transforms, never just fades). Giant
- * bleeding type frames the stack; stickers are draggable on top.
+ * SMASH hero. A real, photoreal burger fills the frame edge-to-edge. It SLAMS in
+ * on load (scale-down + screen-shake + white flash + SFX thud), wears a neon
+ * grade + RGB-split shimmer + CRT vignette, and drifts with a parallax/scale as
+ * you scroll. The wordmark, tagline and CTA are stacked dead-centre over the
+ * photo (no more left-hugging block). Stickers stay draggable on top.
  */
 export function Hero() {
   const t = useTranslations("hero");
   const site = useSiteConfig();
   const manifest = resolveHeroManifest(site.hero);
-  const layers = manifest.layers ?? [];
+  const photo = manifest.still;
+  const focal = manifest.focal ?? [0.5, 0.5];
 
   const { playStamp } = useSmashSfx();
   const shake = useAnimationControls();
   const flash = useRef<HTMLDivElement>(null);
-  const [assembled, setAssembled] = useState(0);
+  const plate = useRef<HTMLDivElement>(null);
   const headingSkew = useVelocitySkew<HTMLHeadingElement>(
     SKEW.heading.factor,
     SKEW.heading.max,
   );
 
-  // Drive the stamp sequence: each layer lands, fires shake + flash + sfx.
+  // The burger lands once: flash + screen-shake + thud, like a smash on the grill.
   useEffect(() => {
-    const reduce = prefersReducedMotion();
-    let cancelled = false;
-    const timers: number[] = [];
+    if (prefersReducedMotion()) return;
+    const id = window.setTimeout(() => {
+      playStamp();
+      void shake.start({
+        x: [0, -7, 8, -5, 0],
+        y: [0, 5, -6, 3, 0],
+        transition: { duration: 0.28, ease: "easeOut" },
+      });
+      const f = flash.current;
+      if (f) {
+        f.style.animation = "none";
+        void f.offsetWidth; // reflow to restart
+        f.style.animation = "smash-flash 0.45s ease-out";
+      }
+    }, 480);
+    return () => window.clearTimeout(id);
+  }, [playStamp, shake]);
 
-    if (reduce) {
-      // Defer the state write out of the synchronous effect body (no cascading
-      // render) — instantly assembled, no stamp animation.
-      const raf = requestAnimationFrame(() => setAssembled(layers.length));
-      return () => cancelAnimationFrame(raf);
-    }
-
-    layers.forEach((_, i) => {
-      const id = window.setTimeout(
-        () => {
-          if (cancelled) return;
-          setAssembled(i + 1);
-          playStamp();
-          // screen-shake pulse
-          void shake.start({
-            x: [0, -6, 7, -4, 0],
-            y: [0, 4, -5, 3, 0],
-            transition: { duration: 0.26, ease: "easeOut" },
-          });
-          // flash pulse
-          const f = flash.current;
-          if (f) {
-            f.style.animation = "none";
-            // reflow to restart the CSS animation
-            void f.offsetWidth;
-            f.style.animation = "smash-flash 0.4s ease-out";
-          }
-        },
-        500 + i * 220,
-      );
-      timers.push(id);
-    });
-    return () => {
-      cancelled = true;
-      timers.forEach((tt) => window.clearTimeout(tt));
+  // Scroll parallax: the photo plate drifts up + scales slightly as you leave.
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const el = plate.current;
+      if (!el) return;
+      const p = getScroll().progress;
+      el.style.transform = `translate3d(0, ${(-p * 12).toFixed(2)}%, 0) scale(${(1 + p * 0.12).toFixed(3)})`;
     };
-    // layers identity is stable for the placeholder manifest
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
     <section
+      id={HERO_ID}
       data-act="hero"
-      className="smash-grid-lines relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 pt-24"
+      className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden"
     >
-      {/* impact flash (stays outside the transforming stack so it covers the
-          whole pinned frame on each stamp) */}
+      {/* ---------- Photoreal burger plate (parallax + entrance) ---------- */}
+      <motion.div animate={shake} className="absolute inset-0 z-0">
+        <div ref={plate} className="absolute inset-0 will-change-transform">
+          <Image
+            src={photo}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover smash-hero-in"
+            style={{ objectPosition: `${focal[0] * 100}% ${focal[1] * 100}%` }}
+          />
+          {/* RGB-split shimmer of the same photo — pure chromatic decoration */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-cover bg-center mix-blend-screen"
+            style={{
+              backgroundImage: `url(${photo})`,
+              backgroundPosition: `${focal[0] * 100}% ${focal[1] * 100}%`,
+              opacity: 0.18,
+              filter:
+                "drop-shadow(3px 0 0 var(--color-accent)) drop-shadow(-3px 0 0 var(--color-accent2))",
+              animation: prefersReducedMotion()
+                ? "none"
+                : "smash-rgb 4.2s ease-in-out infinite",
+            }}
+          />
+        </div>
+      </motion.div>
+
+      {/* ---------- Grade: legibility + neon mood (over the photo) ---------- */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10"
+        style={{
+          background:
+            "linear-gradient(to top, var(--color-bg) 2%, color-mix(in srgb, var(--color-bg) 55%, transparent) 30%, transparent 62%), radial-gradient(120% 100% at 50% 38%, transparent 46%, color-mix(in srgb, var(--color-bg) 78%, transparent) 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10 mix-blend-overlay"
+        style={{
+          background:
+            "radial-gradient(60vmax 50vmax at 50% 90%, color-mix(in srgb, var(--color-accent) 28%, transparent), transparent 70%)",
+        }}
+      />
+
+      {/* impact flash */}
       <div
         ref={flash}
         aria-hidden
         className="pointer-events-none absolute inset-0 z-40 bg-white opacity-0"
       />
 
-      {/* Everything that recedes during the scroll hand-off lives in one
-          transform group so the exit reads as a single move. */}
-      <div
-        className="smash-hero-stack absolute inset-0 flex items-center justify-center px-4 pt-24"
-        style={{ willChange: "transform, filter", filter: "brightness(1) blur(0px)" }}
-      >
-      {/* Giant bleeding type, behind/around the stack. A red ghost duplicate
-          sits 1ch off for a permanent chromatic edge. */}
-      <h1
-        ref={headingSkew}
-        aria-label={t("title")}
-        className="smash-display smash-tight pointer-events-none absolute inset-x-0 top-[14%] z-10 text-center text-[22vw] uppercase"
-        style={{ willChange: "transform" }}
-      >
-        <span aria-hidden className="smash-bleed relative block">
-          <span
-            aria-hidden
-            className="absolute inset-0 block text-[var(--color-accent)] opacity-25"
-            style={{ transform: "translate(0.06em, 0.02em)", WebkitTextStroke: "0" }}
-          >
+      {/* ---------- Centred content stack ---------- */}
+      <div className="smash-hero-content relative z-30 flex flex-col items-center px-4 text-center" style={{ willChange: "transform, filter" }}>
+        <p className="mb-5 text-xs uppercase tracking-[0.5em] text-[var(--color-accent)] md:text-sm">
+          {site.brand} · {t("scrollHint")}
+        </p>
+
+        <h1
+          ref={headingSkew}
+          aria-label={t("title")}
+          className="smash-display smash-tight smash-neon smash-neon-live relative text-[clamp(3.5rem,17vw,13rem)] uppercase text-[var(--color-text)]"
+          style={{ willChange: "transform" }}
+        >
+          <span aria-hidden className="relative block">
+            <span
+              aria-hidden
+              className="absolute inset-0 block text-[var(--color-accent)] opacity-30"
+              style={{ transform: "translate(0.05em, 0.02em)" }}
+            >
+              {t("title")}
+            </span>
             {t("title")}
           </span>
-          {t("title")}
-        </span>
-      </h1>
+        </h1>
 
-      {/* The stamping / parallax stack */}
-      <motion.div
-        id={HERO_ID}
-        animate={shake}
-        className="relative z-20 aspect-square w-[min(82vw,560px)]"
-      >
-        {/* Scroll-driven separation lives here; the inner planes fade/scale
-            in as they "land" so the parallax owns post-assembly motion. */}
-        <LayeredParallax manifest={manifest} explode={1.4} className="absolute inset-0" />
-
-        {/* Stamp overlay: clones the layers and reveals them one by one with a
-            slam-down transform + neon-tinted RGB ghost. Sits exactly on top of
-            the parallax stack until assembly completes, then fades out so the
-            parallax version takes over cleanly. */}
-        {assembled < layers.length && (
-          <div className="absolute inset-0">
-            {layers.map((layer, i) => {
-              const landed = i < assembled;
-              return (
-                <motion.div
-                  key={layer.src}
-                  aria-hidden
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage: `url(${layer.src})`,
-                    backgroundSize: "contain",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    zIndex: Math.round(layer.depth * 100),
-                    filter:
-                      "drop-shadow(0 0 calc(18px*var(--glow)) color-mix(in srgb,var(--color-accent) 70%,transparent))",
-                  }}
-                  initial={{ y: -120 - i * 30, scale: 1.25, opacity: 0 }}
-                  animate={
-                    landed
-                      ? { y: 0, scale: 1, opacity: 1 }
-                      : { y: -120 - i * 30, scale: 1.25, opacity: 0 }
-                  }
-                  transition={T.slam}
-                />
-              );
-            })}
-          </div>
-        )}
-
-        {/* RGB-split ghost of the whole stack — pure decoration, blends red */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-screen"
-          style={{
-            backgroundImage: `url(${manifest.still})`,
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            opacity: 0.25,
-            filter:
-              "drop-shadow(2px 0 0 var(--color-accent)) drop-shadow(-2px 0 0 var(--color-accent2))",
-            animation: prefersReducedMotion()
-              ? "none"
-              : "smash-rgb 3.6s ease-in-out infinite",
-          }}
-        />
-
-        {/* Draggable stickers, constrained to the stage */}
-        <Stickers constraintsId={HERO_ID} />
-      </motion.div>
-
-      {/* Tagline + CTA, lower-left brutalist block */}
-      <div className="absolute bottom-10 left-4 z-30 max-w-sm md:left-8">
-        <p className="mb-4 max-w-xs text-sm uppercase leading-snug tracking-[0.18em] text-[var(--color-muted)]">
+        <p className="mt-6 max-w-xl text-base uppercase leading-snug tracking-[0.14em] text-[var(--color-muted)] md:text-lg">
           {t("subtitle")}
         </p>
-        <Magnetic strength={0.5} className="inline-block">
+
+        <Magnetic strength={0.5} className="mt-9 inline-block">
           <a
             href="#carta"
-            className="smash-display smash-box-neon group/cta inline-flex items-center gap-3 bg-[var(--color-accent)] px-7 py-4 text-lg uppercase tracking-wide text-[var(--color-bg)] transition-[background,transform,box-shadow] duration-300 ease-[var(--ease-lux)] hover:-translate-y-0.5 hover:bg-[var(--color-accent2)]"
+            className="smash-display smash-box-neon group/cta inline-flex items-center gap-3 bg-[var(--color-accent)] px-9 py-4 text-lg uppercase tracking-wide text-[var(--color-bg)] transition-[background,transform,box-shadow] duration-300 ease-[var(--ease-lux)] hover:-translate-y-0.5 hover:bg-[var(--color-accent2)] md:text-xl"
           >
             {t("cta")}
             <span
@@ -214,7 +182,11 @@ export function Hero() {
       <div className="absolute right-4 top-24 z-30 hidden text-right text-[10px] uppercase leading-relaxed tracking-[0.3em] text-[var(--color-muted)] md:block">
         <span
           className="smash-neon text-[var(--color-accent)]"
-          style={{ animation: prefersReducedMotion() ? "none" : "smash-blink 1.1s steps(1) infinite" }}
+          style={{
+            animation: prefersReducedMotion()
+              ? "none"
+              : "smash-blink 1.1s steps(1) infinite",
+          }}
         >
           ●
         </span>{" "}
@@ -223,16 +195,22 @@ export function Hero() {
         {site.address}
       </div>
 
-      {/* scroll hint, centered low — fades as you leave via the stack transform */}
+      {/* scroll hint, centered low */}
       <div className="absolute bottom-6 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-[var(--color-muted)] md:flex">
         <span>{t("scrollHint")}</span>
         <span
           aria-hidden
           className="block h-8 w-px bg-[var(--color-accent)]"
-          style={{ animation: prefersReducedMotion() ? "none" : "smash-scrollpulse 1.8s var(--ease-lux) infinite" }}
+          style={{
+            animation: prefersReducedMotion()
+              ? "none"
+              : "smash-scrollpulse 1.8s var(--ease-lux) infinite",
+          }}
         />
       </div>
-      </div>
+
+      {/* Draggable neon stickers, constrained to the hero */}
+      <Stickers constraintsId={HERO_ID} />
     </section>
   );
 }

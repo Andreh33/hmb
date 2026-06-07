@@ -43,16 +43,10 @@ export interface SiteConfigRow {
   hero: Partial<HeroManifest> | null;
 }
 
-const EXPERIENCE_IDS: ReadonlySet<string> = new Set<ExperienceId>([
-  "ember",
-  "smash",
-  "diner",
-  "prime",
-  "nova",
-]);
+const EXPERIENCE_IDS: ReadonlySet<string> = new Set<ExperienceId>(["smash"]);
 
 function asExperienceId(value: string): ExperienceId {
-  return (EXPERIENCE_IDS.has(value) ? value : "ember") as ExperienceId;
+  return (EXPERIENCE_IDS.has(value) ? value : "smash") as ExperienceId;
 }
 
 export function rowToCategory(row: CategoryRow): Category {

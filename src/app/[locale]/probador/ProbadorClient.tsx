@@ -73,8 +73,8 @@ export function ProbadorClient() {
   const { items } = useMenu();
 
   const [brand, setBrand] = useState(DEFAULT_BRAND);
-  const [exp, setExp] = useState<ExperienceId>("ember");
-  const [accent, setAccent] = useState<string>(EXPERIENCES.ember.colors.accent);
+  const [exp, setExp] = useState<ExperienceId>("smash");
+  const [accent, setAccent] = useState<string>(EXPERIENCES.smash.colors.accent);
   const [photo, setPhoto] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -174,7 +174,7 @@ export function ProbadorClient() {
 
   const reset = useCallback(() => {
     setBrand(DEFAULT_BRAND);
-    pickExperience("ember");
+    pickExperience("smash");
     if (photoUrlRef.current) URL.revokeObjectURL(photoUrlRef.current);
     if (logoUrlRef.current) URL.revokeObjectURL(logoUrlRef.current);
     photoUrlRef.current = null;

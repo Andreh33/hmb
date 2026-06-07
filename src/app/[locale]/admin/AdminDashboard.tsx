@@ -15,7 +15,7 @@ import {
 // Simple, dependency-free CRUD panel over categories / menu_items / site_config.
 // Forms keep local state and dispatch server actions; results surface inline.
 
-const EXPERIENCES: ExperienceId[] = ["ember", "smash", "diner", "prime", "nova"];
+const EXPERIENCES: ExperienceId[] = ["smash"];
 
 const card =
   "rounded-[var(--radius,12px)] border border-white/10 p-5";

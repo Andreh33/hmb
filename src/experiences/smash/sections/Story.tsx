@@ -27,8 +27,9 @@ export function Story() {
     <section
       id="historia"
       data-act="story"
-      className="smash-grid-lines relative w-full overflow-hidden px-4 py-28 md:py-40"
+      className="smash-grid-lines relative w-full overflow-hidden px-4 py-28 md:px-8 md:py-40"
     >
+      <div className="mx-auto max-w-7xl">
       <p className="mb-6 text-xs uppercase tracking-[0.45em] text-[var(--color-accent)]">
         {t("eyebrow")}
       </p>
@@ -70,6 +71,7 @@ export function Story() {
       >
         “{t("quote")}”
       </p>
+      </div>
     </section>
   );
 }

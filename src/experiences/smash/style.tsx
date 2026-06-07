@@ -142,6 +142,14 @@ export function SmashStyle() {
 /* Stamp impact flash. */
 @keyframes smash-flash{0%{opacity:0}8%{opacity:0.9}100%{opacity:0}}
 
+/* Hero burger entrance: slams down from slightly larger + brighter into place. */
+.smash-hero-in{animation:smash-hero-in 0.85s cubic-bezier(0.16,1,0.3,1) both}
+@keyframes smash-hero-in{
+  0%{transform:scale(1.16);opacity:0;filter:brightness(1.5) contrast(1.1)}
+  60%{opacity:1}
+  100%{transform:scale(1.04);opacity:1;filter:brightness(1) contrast(1)}
+}
+
 /* Marquee equalizer-ish blink for the ticker separators. */
 @keyframes smash-blink{0%,49%{opacity:1}50%,100%{opacity:0.25}}
 

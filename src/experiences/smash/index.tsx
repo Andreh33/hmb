@@ -42,11 +42,12 @@ export default function SmashExperience() {
           // carefully as the stamp entrance. We transform an inner wrapper, not
           // the pinned section, so the pin never fights the scale/blur.
           tl.to(
-            "[data-act='hero'] .smash-hero-stack",
+            "[data-act='hero'] .smash-hero-content",
             {
-              yPercent: -10,
-              scale: 0.965,
-              filter: "brightness(0.45) blur(3px)",
+              yPercent: -18,
+              scale: 0.94,
+              opacity: 0.2,
+              filter: "blur(4px)",
               ease: "none",
             },
             0,
