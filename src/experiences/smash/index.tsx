@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollFilm, type ScrollAct } from "@/shared/scroll/ScrollFilm";
 import { OrderBar } from "@/shared/convert/OrderBar";
@@ -14,6 +14,8 @@ import { SmashFooter } from "./sections/Footer";
 import { NeonBlob } from "./sections/NeonBlob";
 import { Atmosphere } from "./sections/Atmosphere";
 import { Ticker } from "./sections/Ticker";
+import { Preloader } from "./sections/Preloader";
+import { SectionFX } from "./sections/SectionFX";
 
 /**
  * SMASH — Brutalist Neon Kinetic.
@@ -29,6 +31,22 @@ import { Ticker } from "./sections/Ticker";
  * no data-act so ScrollFilm ignores them.
  */
 export default function SmashExperience() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // (13) Screen-shake the whole experience when something is added to the cart.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const onShake = () => {
+      root.classList.remove("is-shake");
+      void root.offsetWidth; // restart the animation
+      root.classList.add("is-shake");
+      window.setTimeout(() => root.classList.remove("is-shake"), 420);
+    };
+    window.addEventListener("smash:shake", onShake);
+    return () => window.removeEventListener("smash:shake", onShake);
+  }, []);
+
   const acts: ScrollAct[] = useMemo(
     () => [
       {
@@ -105,8 +123,10 @@ export default function SmashExperience() {
   );
 
   return (
-    <div className="smash-root relative min-h-screen">
+    <div ref={rootRef} className="smash-root relative min-h-screen">
       <SmashStyle />
+      <Preloader />
+      <SectionFX />
       <Atmosphere />
       <NeonBlob />
       <SmashHeader />

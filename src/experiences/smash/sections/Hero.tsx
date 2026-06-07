@@ -109,6 +109,54 @@ export function Hero() {
         </div>
       </motion.div>
 
+      {/* (5) Heat-shimmer over the grill region — a displaced copy of the photo
+          masked to the lower band, animated via the SVG turbulence filter. */}
+      <svg
+        aria-hidden
+        width="0"
+        height="0"
+        style={{ position: "absolute" }}
+      >
+        <filter id="smash-heat-filter">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.012 0.05"
+            numOctaves={2}
+            seed={7}
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="9s"
+              values="0.012 0.05; 0.016 0.07; 0.012 0.05"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="14"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
+      <div
+        aria-hidden
+        className="smash-heat z-[6]"
+        style={{
+          backgroundImage: `url(${photo})`,
+          backgroundPosition: `${focal[0] * 100}% ${focal[1] * 100}%`,
+        }}
+      />
+
+      {/* (4) Vapor / smoke rising off the burger. */}
+      <div className="smash-vapor z-[7]" aria-hidden>
+        <i style={{ left: "32%", ["--dur" as string]: "7s", ["--d" as string]: "0s", ["--dx" as string]: "-12%" }} />
+        <i style={{ left: "48%", ["--dur" as string]: "8.5s", ["--d" as string]: "1.6s", ["--dx" as string]: "8%" }} />
+        <i style={{ left: "62%", ["--dur" as string]: "6.5s", ["--d" as string]: "3.1s", ["--dx" as string]: "-6%" }} />
+      </div>
+
       {/* ---------- Grade: legibility + neon mood (over the photo) ---------- */}
       <div
         aria-hidden
@@ -156,6 +204,21 @@ export function Hero() {
             </span>
             {t("title")}
           </span>
+          {/* (6) Ketchup drips that fall from the title on load. */}
+          {[
+            { left: "12%", h: "46px", d: "0.5s" },
+            { left: "34%", h: "30px", d: "0.9s" },
+            { left: "58%", h: "58px", d: "0.7s" },
+            { left: "76%", h: "26px", d: "1.1s" },
+            { left: "90%", h: "40px", d: "0.6s" },
+          ].map((d) => (
+            <span
+              key={d.left}
+              aria-hidden
+              className="smash-drip"
+              style={{ left: d.left, height: d.h, animationDelay: d.d }}
+            />
+          ))}
         </h1>
 
         <p className="mt-6 max-w-xl text-base uppercase leading-snug tracking-[0.14em] text-[var(--color-muted)] md:text-lg">

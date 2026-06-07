@@ -91,7 +91,7 @@ export function MenuWall() {
                 className="smash-display smash-glitch truncate text-2xl uppercase leading-none md:text-4xl"
                 data-text={it.name[locale]}
               >
-                {it.name[locale]}
+                <NeonText>{it.name[locale]}</NeonText>
               </h3>
               <p className="mt-1 truncate text-sm text-[var(--color-muted)]">
                 {it.desc[locale]}
@@ -113,6 +113,7 @@ export function MenuWall() {
                     color: "var(--color-accent)",
                   });
                   emitConfetti();
+                  window.dispatchEvent(new CustomEvent("smash:shake"));
                 }}
                 className="smash-display border-2 border-[var(--color-text)] bg-[var(--color-text)] px-4 py-2 text-xs uppercase tracking-widest text-[var(--color-bg)] transition-[background,transform,box-shadow] duration-200 ease-[var(--ease-snap)] hover:-translate-y-0.5 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:shadow-[3px_3px_0_0_var(--color-text)] active:translate-y-0 md:text-sm"
                 aria-label={`${t("addToOrder")} ${it.name[locale]}`}

@@ -104,16 +104,17 @@ export function SmashStyle() {
    live CRT flicker once fully lit. */
 .smash-neon-reveal{
   --lit:0;
-  color:color-mix(in srgb, var(--color-muted), var(--color-accent) calc(var(--lit) * 100%));
+  color:color-mix(in srgb, color-mix(in srgb, var(--color-muted) 60%, #000), var(--color-accent) calc(var(--lit) * 100%));
+  opacity:calc(0.4 + 0.6 * var(--lit));
   text-shadow:
-    0 0 calc(7px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 92%, white),
-    0 0 calc(22px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 55%, transparent),
-    0 0 calc(50px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 28%, transparent);
-  transition:color 0.18s linear;
-  will-change:color, text-shadow;
+    0 0 calc(8px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 92%, white),
+    0 0 calc(24px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 55%, transparent),
+    0 0 calc(54px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 28%, transparent);
+  transition:opacity 0.12s linear;
+  will-change:color, text-shadow, opacity;
 }
 .smash-neon-reveal.tone2{
-  color:color-mix(in srgb, var(--color-muted), var(--color-accent2) calc(var(--lit) * 100%));
+  color:color-mix(in srgb, color-mix(in srgb, var(--color-muted) 60%, #000), var(--color-accent2) calc(var(--lit) * 100%));
   text-shadow:
     0 0 calc(7px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 92%, white),
     0 0 calc(22px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 55%, transparent),
@@ -229,6 +230,101 @@ export function SmashStyle() {
   position:absolute;inset:0;
   background:radial-gradient(120% 110% at 50% 42%, transparent 52%, rgba(0,0,0,0.55) 100%);
   mix-blend-mode:multiply;
+}
+
+/* ===== Feature FX (4,5,6,9,10,13,47) ===== */
+
+/* (13) Screen-shake on add-to-cart. */
+.smash-root.is-shake{animation:smash-screenshake 0.4s cubic-bezier(.36,.07,.19,.97)}
+@keyframes smash-screenshake{
+  10%{transform:translate(-5px,3px) rotate(-0.4deg)}
+  25%{transform:translate(7px,-4px) rotate(0.5deg)}
+  40%{transform:translate(-6px,5px)}
+  55%{transform:translate(5px,-3px) rotate(-0.3deg)}
+  70%{transform:translate(-4px,2px)}
+  85%{transform:translate(3px,-2px)}
+  100%{transform:translate(0,0)}
+}
+
+/* (9) Aggressive RGB-split + jitter when a section scrolls in. */
+/* No transform here on purpose — GSAP owns section transforms; we only flash
+   RGB-split (filter) + clip tears so the two never fight. */
+.smash-fx-glitch{animation:smash-section-glitch 0.5s steps(2,end)}
+@keyframes smash-section-glitch{
+  0%{filter:none;clip-path:none}
+  14%{filter:drop-shadow(7px 0 0 var(--color-accent)) drop-shadow(-7px 0 0 var(--color-accent2));clip-path:inset(0 0 62% 0)}
+  30%{filter:drop-shadow(-6px 0 0 var(--color-accent)) drop-shadow(6px 0 0 var(--color-accent2));clip-path:inset(40% 0 18% 0)}
+  46%{filter:drop-shadow(5px 0 0 var(--color-accent2));clip-path:inset(70% 0 0 0)}
+  62%{filter:none;clip-path:none}
+  100%{filter:none;clip-path:none}
+}
+
+/* (10) VHS tear + scanline sweep overlay on section change. */
+.smash-vhs{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0}
+.smash-vhs.run{animation:smash-vhs-run 0.6s ease-out}
+.smash-vhs::before{ /* sweeping bright scanline band */
+  content:"";position:absolute;left:0;right:0;height:14vh;
+  background:linear-gradient(to bottom,
+    transparent,
+    color-mix(in srgb, var(--color-accent) 22%, transparent) 40%,
+    rgba(255,255,255,0.18) 50%,
+    color-mix(in srgb, var(--color-accent2) 22%, transparent) 60%,
+    transparent);
+  mix-blend-mode:screen;
+  animation:smash-vhs-band 0.6s ease-out;
+}
+.smash-vhs::after{ /* fine CRT lines + tracking noise */
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0 1px, transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+@keyframes smash-vhs-run{0%{opacity:1}100%{opacity:0}}
+@keyframes smash-vhs-band{0%{top:-16vh}100%{top:104vh}}
+
+/* (6) Ketchup drip falling from the hero title on load. */
+.smash-drip{position:absolute;top:100%;width:6px;border-radius:0 0 6px 6px;
+  background:linear-gradient(to bottom, var(--color-accent), color-mix(in srgb,var(--color-accent) 70%, #600));
+  box-shadow:0 0 calc(10px*var(--glow)) color-mix(in srgb,var(--color-accent) 70%,transparent);
+  transform-origin:top;transform:scaleY(0);
+  animation:smash-drip-fall 1.4s cubic-bezier(.5,.05,.5,1) forwards;
+}
+.smash-drip::after{content:"";position:absolute;left:50%;bottom:-5px;width:11px;height:11px;
+  border-radius:50%;background:inherit;transform:translateX(-50%);
+  box-shadow:0 0 calc(10px*var(--glow)) color-mix(in srgb,var(--color-accent) 70%,transparent);}
+@keyframes smash-drip-fall{
+  0%{transform:scaleY(0)}
+  70%{transform:scaleY(1)}
+  100%{transform:scaleY(0.96)}
+}
+
+/* (4) Vapor / smoke rising off the burger. */
+.smash-vapor{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
+.smash-vapor i{position:absolute;bottom:32%;display:block;width:34%;height:34%;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5), rgba(255,255,255,0) 65%);
+  filter:blur(14px);opacity:0;
+  animation:smash-vapor-rise var(--dur,7s) ease-in infinite;animation-delay:var(--d,0s);}
+@keyframes smash-vapor-rise{
+  0%{transform:translate(0,0) scale(0.6);opacity:0}
+  18%{opacity:0.5}
+  100%{transform:translate(var(--dx,0),-130%) scale(1.5);opacity:0}
+}
+
+/* (5) Heat-shimmer displacement over the grill region. */
+.smash-heat{position:absolute;inset:0;pointer-events:none;
+  background-size:cover;background-position:center 60%;
+  -webkit-mask-image:linear-gradient(to top, #000 0%, #000 18%, transparent 46%);
+          mask-image:linear-gradient(to top, #000 0%, #000 18%, transparent 46%);
+  filter:url(#smash-heat-filter);opacity:0.6;}
+
+/* (47) Preloader. */
+.smash-preloader{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:var(--color-bg);}
+.smash-preloader.lift{animation:smash-preload-lift 0.7s cubic-bezier(.85,0,.15,1) forwards}
+@keyframes smash-preload-lift{0%{transform:translateY(0)}100%{transform:translateY(-100%)}}
+@keyframes smash-preload-stamp{
+  0%{transform:scale(2.4);opacity:0;filter:blur(6px)}
+  60%{opacity:1}
+  100%{transform:scale(1);opacity:1;filter:blur(0)}
 }
 
 `,
