@@ -310,13 +310,6 @@ export function SmashStyle() {
   100%{transform:translate(var(--dx,0),-130%) scale(1.5);opacity:0}
 }
 
-/* (5) Heat-shimmer displacement over the grill region. */
-.smash-heat{position:absolute;inset:0;pointer-events:none;
-  background-size:cover;background-position:center 60%;
-  -webkit-mask-image:linear-gradient(to top, #000 0%, #000 18%, transparent 46%);
-          mask-image:linear-gradient(to top, #000 0%, #000 18%, transparent 46%);
-  filter:url(#smash-heat-filter);opacity:0.6;}
-
 /* (47) Preloader. */
 .smash-preloader{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;
   align-items:center;justify-content:center;background:var(--color-bg);}

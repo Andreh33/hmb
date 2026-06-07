@@ -134,7 +134,7 @@ export default function SmashExperience() {
       <ScrollFilm acts={acts}>
         <main className="relative z-10">
           <Hero />
-          <Ticker direction="left" tone="accent" />
+          <Ticker direction="left" tone="accent" tilt={-4} big />
           <MenuWall />
           <Ticker direction="right" tone="accent2" />
           <Story />

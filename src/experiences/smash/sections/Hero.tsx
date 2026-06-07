@@ -109,47 +109,6 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* (5) Heat-shimmer over the grill region — a displaced copy of the photo
-          masked to the lower band, animated via the SVG turbulence filter. */}
-      <svg
-        aria-hidden
-        width="0"
-        height="0"
-        style={{ position: "absolute" }}
-      >
-        <filter id="smash-heat-filter">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.012 0.05"
-            numOctaves={2}
-            seed={7}
-            result="noise"
-          >
-            <animate
-              attributeName="baseFrequency"
-              dur="9s"
-              values="0.012 0.05; 0.016 0.07; 0.012 0.05"
-              repeatCount="indefinite"
-            />
-          </feTurbulence>
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="14"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
-      </svg>
-      <div
-        aria-hidden
-        className="smash-heat z-[6]"
-        style={{
-          backgroundImage: `url(${photo})`,
-          backgroundPosition: `${focal[0] * 100}% ${focal[1] * 100}%`,
-        }}
-      />
-
       {/* (4) Vapor / smoke rising off the burger. */}
       <div className="smash-vapor z-[7]" aria-hidden>
         <i style={{ left: "32%", ["--dur" as string]: "7s", ["--d" as string]: "0s", ["--dx" as string]: "-12%" }} />
