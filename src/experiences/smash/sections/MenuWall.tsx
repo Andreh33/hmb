@@ -93,7 +93,7 @@ export function MenuWall() {
               >
                 <NeonText>{it.name[locale]}</NeonText>
               </h3>
-              <p className="mt-1 truncate text-sm text-[var(--color-muted)]">
+              <p className="mt-1 truncate text-sm text-[color-mix(in_srgb,var(--color-text)_72%,transparent)]">
                 {it.desc[locale]}
               </p>
             </div>

@@ -104,8 +104,9 @@ export function SmashStyle() {
    live CRT flicker once fully lit. */
 .smash-neon-reveal{
   --lit:0;
-  color:color-mix(in srgb, color-mix(in srgb, var(--color-muted) 60%, #000), var(--color-accent) calc(var(--lit) * 100%));
-  opacity:calc(0.4 + 0.6 * var(--lit));
+  /* Unlit = clean, legible near-white tint (crisp); lit = full accent neon. */
+  color:color-mix(in srgb, color-mix(in srgb, var(--color-text) 78%, var(--color-muted)), var(--color-accent) calc(var(--lit) * 100%));
+  opacity:calc(0.78 + 0.22 * var(--lit));
   text-shadow:
     0 0 calc(8px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 92%, white),
     0 0 calc(24px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 55%, transparent),
@@ -114,7 +115,7 @@ export function SmashStyle() {
   will-change:color, text-shadow, opacity;
 }
 .smash-neon-reveal.tone2{
-  color:color-mix(in srgb, color-mix(in srgb, var(--color-muted) 60%, #000), var(--color-accent2) calc(var(--lit) * 100%));
+  color:color-mix(in srgb, color-mix(in srgb, var(--color-text) 78%, var(--color-muted)), var(--color-accent2) calc(var(--lit) * 100%));
   text-shadow:
     0 0 calc(7px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 92%, white),
     0 0 calc(22px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 55%, transparent),
