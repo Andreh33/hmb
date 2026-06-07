@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useSiteConfig } from "@/shared/data/useMenu";
 import { Magnetic } from "@/shared/motion/primitives";
+import { NeonText } from "./NeonText";
 
 /**
  * SMASH ubicación — a brutalist contact slab. Hard neon-bordered panel with the
@@ -22,13 +23,15 @@ export function Location() {
     >
       <div className="smash-box-neon mx-auto grid max-w-6xl gap-0 border-2 border-[var(--color-text)] bg-[var(--color-surface)] transition-transform duration-500 ease-[var(--ease-lux)] hover:-translate-y-1 md:grid-cols-2">
         <div className="border-b-2 border-[var(--color-text)] p-8 md:border-b-0 md:border-r-2 md:p-12">
-          <p className="mb-4 text-xs uppercase tracking-[0.4em] text-[var(--color-accent)]">
-            {t("eyebrow")}
+          <p className="mb-4 text-xs uppercase tracking-[0.4em]">
+            <NeonText>{t("eyebrow")}</NeonText>
           </p>
           <h2 className="smash-display smash-tight text-[clamp(2.2rem,5vw,4rem)] uppercase leading-[0.85]">
             {t("title")}
           </h2>
-          <p className="mt-4 text-[var(--color-muted)]">{t("subtitle")}</p>
+          <p className="mt-4">
+            <NeonText tone="accent2">{t("subtitle")}</NeonText>
+          </p>
 
           <p className="smash-display mt-10 text-2xl">{site.address}</p>
           <Magnetic strength={0.5} className="mt-6 inline-block">

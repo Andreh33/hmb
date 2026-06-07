@@ -9,6 +9,7 @@ import { emitConfetti, emitFlyToCart } from "@/shared/convert/fly-to-cart";
 import type { Locale } from "@/i18n/routing";
 import { useSmashSfx } from "../motion";
 import { T, STEP } from "../anim";
+import { NeonText } from "./NeonText";
 
 /**
  * SMASH carta — a brutalist price wall. Not cards: a hard-ruled list grid where
@@ -40,8 +41,8 @@ export function MenuWall() {
         <h2 className="smash-display smash-tight text-[clamp(3rem,11vw,9rem)] uppercase leading-[0.8]">
           <span className="smash-neon smash-neon-live text-[var(--color-accent)]">{t("title")}</span>
         </h2>
-        <p className="max-w-xs text-sm uppercase tracking-[0.2em] text-[var(--color-muted)]">
-          {t("subtitle")}
+        <p className="max-w-xs text-sm uppercase tracking-[0.2em]">
+          <NeonText>{t("subtitle")}</NeonText>
         </p>
       </header>
 
@@ -98,8 +99,10 @@ export function MenuWall() {
             </div>
 
             <div className="flex shrink-0 items-center gap-4">
-              <span className="smash-display smash-neon-2 text-xl tabular-nums text-[var(--color-accent2)] md:text-3xl">
-                {(it.priceCents / 100).toFixed(2)}€
+              <span className="smash-display text-xl tabular-nums md:text-3xl">
+                <NeonText tone="accent2">
+                  {(it.priceCents / 100).toFixed(2)}€
+                </NeonText>
               </span>
               <button
                 onClick={(e) => {

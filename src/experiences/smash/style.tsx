@@ -99,6 +99,28 @@ export function SmashStyle() {
   97%{opacity:1}
 }
 
+/* Scroll-driven neon ignition. --lit (0..1) is written per-frame by NeonText:
+   color fades muted->accent and the gas-tube glow grows; .is-flicker adds the
+   live CRT flicker once fully lit. */
+.smash-neon-reveal{
+  --lit:0;
+  color:color-mix(in srgb, var(--color-muted), var(--color-accent) calc(var(--lit) * 100%));
+  text-shadow:
+    0 0 calc(7px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 92%, white),
+    0 0 calc(22px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 55%, transparent),
+    0 0 calc(50px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent) 28%, transparent);
+  transition:color 0.18s linear;
+  will-change:color, text-shadow;
+}
+.smash-neon-reveal.tone2{
+  color:color-mix(in srgb, var(--color-muted), var(--color-accent2) calc(var(--lit) * 100%));
+  text-shadow:
+    0 0 calc(7px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 92%, white),
+    0 0 calc(22px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 55%, transparent),
+    0 0 calc(50px * var(--lit) * var(--glow)) color-mix(in srgb, var(--color-accent2) 28%, transparent);
+}
+.smash-neon-reveal.is-flicker{animation:smash-neon-flicker 7s steps(1) infinite}
+
 /* Nav link: neon underline wipes in from the left on hover. */
 .smash-navlink{position:relative;transition:color 0.25s var(--ease-snap)}
 .smash-navlink::after{

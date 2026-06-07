@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { OutlineToFill } from "@/shared/motion/primitives";
 import { useVelocitySkew } from "../scroll";
 import { SKEW } from "../anim";
+import { NeonText } from "./NeonText";
 
 /**
  * SMASH historia — full-bleed neon manifesto. A giant outline-to-fill headline
@@ -30,8 +31,8 @@ export function Story() {
       className="smash-grid-lines relative w-full overflow-hidden px-4 py-28 md:px-8 md:py-40"
     >
       <div className="mx-auto max-w-7xl">
-      <p className="mb-6 text-xs uppercase tracking-[0.45em] text-[var(--color-accent)]">
-        {t("eyebrow")}
+      <p className="mb-6 text-xs uppercase tracking-[0.45em]">
+        <NeonText>{t("eyebrow")}</NeonText>
       </p>
 
       <OutlineToFill
@@ -56,8 +57,8 @@ export function Story() {
             <span className="smash-display block text-5xl text-[var(--color-accent2)] transition-transform duration-300 ease-[var(--ease-snap)] group-hover:-translate-y-0.5">
               0{i + 1}
             </span>
-            <h3 className="smash-display mt-4 text-2xl uppercase transition-colors duration-300 group-hover:text-[var(--color-accent)]">
-              {p.title}
+            <h3 className="smash-display mt-4 text-2xl uppercase">
+              <NeonText tone={i === 1 ? "accent" : "accent2"}>{p.title}</NeonText>
             </h3>
             <p className="mt-2 text-sm text-[var(--color-muted)]">{p.body}</p>
           </div>
